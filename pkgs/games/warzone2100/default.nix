@@ -44,11 +44,19 @@ in
 
 stdenv.mkDerivation rec {
   inherit pname;
-  version  = "4.3.2";
+  version  = "4.3.3";
 
+  # Possible reasons, for why we don't fetch from GitHub:
+  #
+  # * the official download page links to sourceforge, although development happens on GitHub
+  # * warzone's build process tries to identify the build revision by calling git, but fetchFromGitHub and similar tools remove the .git folder.
+  #   This is because the .git folder apparently is not stable (i.e. can change for repeated repository downloads): https://github.com/NixOS/nixpkgs/issues/8567
+  # * The sourceforge release of the source includes a build_tools/autorevision.cache file with the revision data, so the cmake process does not try to retrieve it via git.
+  # * Hence, patching the build process can be avoided by using the sourceforge release.
+  #
   src = fetchurl {
     url = "mirror://sourceforge/${pname}/releases/${version}/${pname}_src.tar.xz";
-    sha256 = "sha256-RcpHk+p9Adu9zkd2J54hspeolZr/xsBsY8eUHLGY0xw=";
+    sha256 = "sha256-PDy5mIYAoQ9VAJCTRMiBqUlRtKIqVHiMuBiozTtH5Z4=";
   };
 
   buildInputs = [
